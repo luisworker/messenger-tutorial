@@ -3,7 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\ImagePost;
-use App\Messenger\AddPonkaToImage;
+use App\Messenger\DeletePonkaToImage;
+use App\MessengerHandler\DeletePonkaToImageHandler;
 use App\Photo\PhotoPonkaficator;
 use App\Repository\ImagePostRepository;
 use App\Photo\PhotoFileManager;
@@ -59,7 +60,7 @@ class ImagePostController extends AbstractController
         $entityManager->flush();
 
 
-		$message = new AddPonkaToImage($imagePost);
+		$message = new DeletePonkaToImage($imagePost);
 		$messageBus->dispatch($message);
 
 
@@ -69,13 +70,10 @@ class ImagePostController extends AbstractController
     /**
      * @Route("/api/images/{id}", methods="DELETE")
      */
-    public function delete(ImagePost $imagePost, EntityManagerInterface $entityManager, PhotoFileManager $photoManager)
+    public function delete(ImagePost $imagePost, MessageBusInterface $messageBus)
     {
-        $photoManager->deleteImage($imagePost->getFilename());
-
-        $entityManager->remove($imagePost);
-        $entityManager->flush();
-
+		$message = new DeletePonkaToImage($imagePost);
+		$messageBus->dispatch($message);
         return new Response(null, 204);
     }
 

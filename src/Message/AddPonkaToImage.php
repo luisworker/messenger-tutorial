@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Messenger;
+namespace App\Message;
 
 use App\Entity\ImagePost;
 
-class DeletePonkaToImage
+class AddPonkaToImage
 {
 
 	private $imagePost;
 
-	public function	__construct(ImagePost $imagePost)
+	public function __construct(ImagePost $imagePost)
 	{
+
 		$this->imagePost = $imagePost;
 	}
 
@@ -18,4 +19,7 @@ class DeletePonkaToImage
 	{
 		return $this->imagePost;
 	}
+
+
+
 }

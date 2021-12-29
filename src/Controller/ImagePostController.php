@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\ImagePost;
-use App\Messenger\AddPonkaToImage;
-use App\Photo\PhotoPonkaficator;
+use App\Message\AddPonkaToImage;
+use App\Message\DeletePonkaToImage;
 use App\Repository\ImagePostRepository;
 use App\Photo\PhotoFileManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,7 +36,7 @@ class ImagePostController extends AbstractController
     /**
      * @Route("/api/images", methods="POST")
      */
-    public function create(Request $request, ValidatorInterface $validator, PhotoFileManager $photoManager, EntityManagerInterface $entityManager, PhotoPonkaficator $ponkaficator, MessageBusInterface $messageBus)
+    public function create(Request $request, ValidatorInterface $validator, PhotoFileManager $photoManager, EntityManagerInterface $entityManager, MessageBusInterface $messageBus)
     {
         /** @var UploadedFile $imageFile */
         $imageFile = $request->files->get('file');
@@ -59,17 +59,12 @@ class ImagePostController extends AbstractController
         $entityManager->flush();
 
 
-		$message = new AddPonkaToImage();
+		$message = new AddPonkaToImage($imagePost);
 		$messageBus->dispatch($message);
         /*
          * Start Ponkafication!
          */
-        $updatedContents = $ponkaficator->ponkafy(
-            $photoManager->read($imagePost->getFilename())
-        );
-        $photoManager->update($imagePost->getFilename(), $updatedContents);
-        $imagePost->markAsPonkaAdded();
-        $entityManager->flush();
+
         /*
          * You've been Ponkafied!
          */
@@ -80,12 +75,10 @@ class ImagePostController extends AbstractController
     /**
      * @Route("/api/images/{id}", methods="DELETE")
      */
-    public function delete(ImagePost $imagePost, EntityManagerInterface $entityManager, PhotoFileManager $photoManager)
+    public function delete(ImagePost $imagePost, MessageBusInterface $messageBus)
     {
-        $photoManager->deleteImage($imagePost->getFilename());
-
-        $entityManager->remove($imagePost);
-        $entityManager->flush();
+		$message = new DeletePonkaToImage($imagePost);
+		$messageBus->dispatch($message);
 
         return new Response(null, 204);
     }

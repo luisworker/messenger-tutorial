@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Messenger;
+namespace App\Message;
 
 use App\Entity\ImagePost;
 
-class AddPonkaToImage
+class DeletePonkaToImage
 {
 
 	private $imagePost;

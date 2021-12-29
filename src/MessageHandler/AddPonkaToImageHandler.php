@@ -1,8 +1,8 @@
 <?php
 
-namespace App\MessengerHandler;
+namespace App\MessageHandler;
 
-use App\Messenger\AddPonkaToImage;
+use App\Message\AddPonkaToImage;
 use App\Photo\PhotoFileManager;
 use App\Photo\PhotoPonkaficator;
 use Doctrine\ORM\EntityManagerInterface;

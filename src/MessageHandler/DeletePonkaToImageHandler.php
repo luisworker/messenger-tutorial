@@ -1,8 +1,8 @@
 <?php
 
-namespace App\MessengerHandler;
+namespace App\MessageHandler;
 
-use App\Messenger\DeletePonkaToImage;
+use App\Message\DeletePonkaToImage;
 use App\Photo\PhotoFileManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
